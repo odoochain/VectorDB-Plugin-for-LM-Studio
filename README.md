@@ -1,203 +1,164 @@
 <div align="center">
-  <h1>🚀 Supercharge your <a href="https://lmstudio.ai/">LM Studio</a> with a Vector Database!  Now with Vision Models!</h1>
-  <h3>Ask questions about your documents and get an answer from LM Studio!<br><a href="https://youtu.be/8-ZAYI4MvtA">Introductory Video</a><br><a href="https://medium.com/@vici0549/search-images-with-vector-database-retrieval-augmented-generation-rag-3d5a48881de5">Medium Article</a></h3>
+  <h1>🚀 Supercharged Vector Database!</h1>
+
+  <a href="#requirements">Requirements</a>
+  &nbsp;&bull;&nbsp;
+  <a href="#installation">Installation</a>
+  &nbsp;&bull;&nbsp;
+  <a href="#using-the-program">Using the Program</a>
+  &nbsp;&bull;&nbsp;
+  <a href="#request-a-feature-or-report-a-bug">Request a Feature or Report a Bug</a>
+  &nbsp;&bull;&nbsp;
+  <a href="#contact">Contact</a>
+</div>
+
+This repository allows you to create and search a vector database for relevant context across a wide variety of documents and then get a response from the large language model that's more accurate.  This is commonly referred to as "retrieval augmented generation" (RAG) and it drastically reduces hallucinations from the LLM!  You can watch an introductory [Video](https://www.youtube.com/watch?v=8-ZAYI4MvtA) or read a [Medium article](https://medium.com/@vici0549/search-images-with-vector-database-retrieval-augmented-generation-rag-3d5a48881de5) about the program. <br>
+
+
+
+
+<div align="center">
+  <h3>At a Glance</h3>
+
+| Feature                                             | Details                                                                                                              |
+|-----------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| General text extraction                             | `.pdf` `.docx` `.epub` `.txt` `.html` `.enex` `.eml` `.msg` `.csv` `.xls` `.xlsx` `.rtf` `.odt`          |
+| "Vision" models to create image summaries           | `.png` `.jpg` `.jpeg` `.bmp` `.gif` `.tif` `.tiff`                                                             |
+| Transcribe audio files to text                      | `.mp3` `.wav` `.m4a` `.ogg` `.wma` `.flac` and more...                                                         |
+| Type or speak your query                            | Using a powerful ```WhisperS2T``` voice recorder                                                                     |
+| Get a response from an LLM                          | `LM Studio` `Local Models` `Chat GPT` (coming soon)                                                                |
+| Text to speech playback of the LLM's response       | ```Bark``` ```WhisperSpeech``` ```ChatTTS``` ```Google TTS```                                                     |
+| CPU and ```Nvidia``` GPU support                    | Looking for testers or contributors for ```AMD``` and ```Intel``` GPUs as well as ```Metal/MPS/MLX```                |
+
 </div>
 
 <div align="center">
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th>Database</th>
-      <th>Transcribe</th>
-      <th>Bark/TTS</th>
-      <th>Vision</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Intel CPU</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>AMD CPU</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>Nvidia GPU</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>AMD GPU on Windows</td>
-      <td>❌</td>
-      <td>❌</td>
-      <td>❌</td>
-      <td>❌</td>
-    </tr>
-    <tr>
-      <td>AMD GPU on Linux</td>
-      <td>✅</td>
-      <td>❌</td>
-      <td>✅</td>
-      <td>✅</td>
-    </tr>
-    <tr>
-      <td>Apple CPU</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>❌</td>
-    </tr>
-    <tr>
-      <td>Apple Metal/MPS</td>
-      <td>✅</td>
-      <td>❌</td>
-      <td>❓</td>
-      <td>❌</td>
-    </tr>
-    <tr>
-      <td>Apple MLX</td>
-      <td>TBD</td>
-      <td>TBD</td>
-      <td>TBD</td>
-      <td>TBD</td>
-    </tr>
-  </tbody>
-</table>
+  <h3><u>Requirements</u></h3>
+
+| [🐍 Python 3.11](https://www.python.org/downloads/release/python-3119/) &nbsp;&bull;&nbsp; [📁 Git](https://git-scm.com/downloads) &nbsp;&bull;&nbsp; [📁 Git LFS](https://git-lfs.com/) &nbsp;&bull;&nbsp; [🌐 Pandoc](https://github.com/jgm/pandoc/releases) &nbsp;&bull;&nbsp; [🛠️ Compiler](https://visualstudio.microsoft.com/) |
+|---|
+
+The above link downloads Visual Studio as an example.  Make sure to install the required SDKs, however.
+ 
+> <details>
+>   <summary>EXAMPLE error when no compiler installed:</summary>
+>   <img src="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/sample_error.png?raw=true">
+> </details>
+> 
+> <details>
+>   <summary>EXAMPLE of installing the correct SDKs:</summary>
+>   <img src="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/build_tools.png?raw=true">
+> </details>
+
 </div>
 
-<div align="center"> <h2><u>REQUIREMENTS</h2></div>
-  
-1) 🐍[Python 3.10](https://www.python.org/downloads/release/python-31011/) or [Python 3.11](https://www.python.org/downloads/release/python-3117/)
-2) 📁[Git](https://git-scm.com/downloads)
-3) 📁[Git Large File Storage](https://git-lfs.com/).
-4) 🌐[Pandoc](https://github.com/jgm/pandoc/releases).
-5) Build Tools.
-   > Certain dependencies don't have pre-compiled "wheels" so you must build them.  Therefore, you must install something that can build source code such as [Microsoft Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) and/or [Visual Studio](https://visualstudio.microsoft.com/).  If you decide to use both of these programs in conjunction, make sure to select the "Desktop development with C++" extension and check the four boxes on the right containing "SDK."
+[Back to Top](#top)
 
-   <details>
-     <summary>EXAMPLE ERROR ON WINDOWS</summary>
-     <img src="https://github.com/BBC-Esq/ChromaDB-Plugin-for-LM-Studio/raw/main/sample_error.png">
-   </details>
-
-   <details>
-     <summary>EXAMPLE SOLUTION ON WINDOWS</summary>
-     <img src="https://github.com/BBC-Esq/ChromaDB-Plugin-for-LM-Studio/raw/main/build_tools.png">
-   </details>
-
-6) 🟢Nvidia GPU acceleration requires [CUDA 12.1+](https://developer.nvidia.com/cuda-toolkit).
-
-<div align="center"> <h2>INSTALLATION</h2></div>
-
-<details>
-  <summary>🪟WINDOWS INSTRUCTIONS</summary>
+<a name="installation"></a>
+<div align="center"> <h2>Installation</h2></div>
   
 ### Step 1
-🟢 Nvidia GPU ➜ Install CUDA 12.1+
-
-🔴 AMD GPU - (AMD GPU acceleration support coming in future releases).
+Download the latest "release," extract its contents, and open the "src" folder:
+  * NOTE: If you clone this repository you will development versions, which may or may not be stable.
+   > The last attempt to support 🐧 Linux and 🍎 MacOS is Release v3.5.2.  Make sure and follow the ```readme.md``` instructions there.
 ### Step 2
-Download the ZIP file for the latest "release," extract its contents, navigate to the "src" folder to run the commands below.
-  * NOTE: If you clone this repository you WILL NOT get the latest release.  Instead, you will development versions of this program which may or may not be stable.
-### Step 3
-Navigate to the ```src``` folder, open a command prompt, and create a virtual environment:
+Within the ```src``` folder, create a [virtual environment](https://realpython.com/python-virtual-environments-a-primer/):
 ```
 python -m venv .
 ```
-### Step 4
+### Step 3
 Activate the virtual environment:
 ```
 .\Scripts\activate
 ```
-### Step 5
-Run setup:
+### Step 4
+Run the setup script:
+   > Only for ```Windows``` for now.
 ```
-python setup.py
+python setup_windows.py
 ```
+### Step 5 - 🔥IMPORTANT🔥
+In order to use the Ask Jeeves functionality you must:
+1) Go into the ```Assets``` folder;
+2) Right click on ```koboldcpp_nocuda.exe```;
+3) Check the "Unblock" checkbox
+4) Click OK.
 
-### Optional Step 6
-Run this command if you want to doublecheck that you installed the Pytorch and gpu-acceleration software correctly:
+<img src="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/kobold_unblock.png?raw=true" width="300">
+
+If the "unblock" checkbox is not visible for whatever reason, another option is to doubleclick ```koboldcpp_nocuda.exe```, select the ```.gguf``` file within the ```Assets``` directory, and start the program.  This should (at least on Windows) attempt to start the Kobold program, which will trigger an option to "allow" it and/or create an exception to "Windows Defender" on your computer.  Select "Allow" or whatever other message you receive, which will enable it for all future interactions.  Please note that you should do this before trying to run the ```Ask Jeeves``` functionality in this program; otherwise, it may not work.
+  > Submit a Github ```Issue``` if you encounter any problems as ```Ask Jeeves``` is a relatively new feature.
+
+[Back to Top](#top)
+
+<a name="using-the-program"></a>
+<div align="center"> <h3>🖥️Usage🖥️</h3></div>
+
+> 🔥Important🔥 for more detailed instructions just Ask Jeeves!
+
+### Activate the virtual environment and start the program
+> Every time you want to use the program you must activate the virtual environment:
 ```
-python check_gpu.py
+.\Scripts\activate
 ```
-</details>
-
-<details>
-  <summary>🐧LINUX INSTRUCTIONS</summary>
-
-Linux users must use Release v3.5.2 until I can update the codebase due to recent major changes.  Download the ZIP file for that release and follow the instructions in the readme.md.
-
-</details>
-
-<details>
-  <summary>🍎APPLE INSTRUCTIONS</summary>
-
-MacOS users must use Release v3.5.2 until I can update the codebase due to recent major changes.  Download the ZIP file for that release and follow the instructions in the readme.md.
-
-</details>
-
-<div align="center"> <h2>USING THE PROGRAM</h2></div>
-<details>
-  <summary>🖥️INSTRUCTIONS🖥</summary>
-
-## Activate Virtual Environment
-* Once you install the program you've already created a virtual environment, so you just need to activate it each time you want to restart it.  Remember to run the appropriate command to do so (based on your platform) within the ```src``` folder.
-## Start the Program
 ```
 python gui.py
 ```
-> Only systems with an Nvidia GPU will display gpu power, usage, and VRAM metrics.
 
-# 🔥Important🔥
-* Read the User Guide before sending me questions.
+### Download the vector model
+* Select and download a vector/embedding model from the ```Models Tab```.
 
-## Download Vector Model
-* In the ```Models Tab``` tab, choose the embedding model you want to download.  The ```User Guide Tab``` contains information about the various models.
+### Create a vector database
+This program extracts the text from a variety of file types and puts them into the vector database.  It also allows you to create summarizes of images and transcriptions of audio files to be put into the database.
 
-## Create a Vector Database
-* In the ```Create Database``` tab, click ```Choose Files``` and select one or more files to add.  This can be repeated as many times as you wish.
-  * Supported documents are: ```.pdf```, ```.docx```, ```.epub```, ```.txt```, ```.html```, ```.enex```, ```.eml```, ```.msg```, ```.csv```, ```.xls```, ```.xlsx```, ```.rtf```, ```.odt```.
-* If you selected any image files, I highly recommend that you adjust the vision model settings within the ```Settings``` tab and testing the settings while processing a single image, which can easily be done within the ```Tools``` tab.
-  * Supported images are: ```.png```, ```.jpg```, ```.jpeg```, ```.bmp```, ```.gif```, ```.tif```, ```.tiff```
-* 🔥 To add audio files you must transcribe one or more audio files from the ```Tools Tab```.  The transcriptions will be saved and added when you create the vector database.
-  * Supported audio extensions include, but are not limited to: ```.mp3```, ```.wav```, ```.m4a```, ```.ogg```, ```.wma```
-* Click ```Choose Model```.
-* Click 🔥ONCE🔥 on the directory containing the vector model you want to use and then click "OK."
-* In the input box, enter a name for the database you want to create (accepts numbers, lowercase letters, and the characters "-" or "_").
-* In the ```Settings Tab```, set the chunk size, chunk overlap, and the device you want to use.  More information is in the User Guide.
-* Click the ```Create Vector Database``` button.
-  * 🔥 MAKE SURE to wait until the command prompt states that the database has been successfully created before proceeding.
+### Entering General File Types
 
-## Delete a Database
-* In the ```Manage Databases``` tab, select a database from the pulldown menu and click ```Delete Database.```
-  > The ability to delete one or more specific files is coming soon.
+In the ```Create Database``` tab, select files you want to add to the database.  You can click the ```Choose Files``` button as many times as you want.
+
+### Entering Images
+This program uses "vision" models to create summaries of images, which can then be entered into the database and searched.  Before inputting images, I highly recommend that you test the various vision models for the one you like the most.
+
+To test a vision model:
+1) From the ```Create Database``` tab, select one or more images.
+2) From the ```Settings``` tab, select the vision model you want to test.
+3) From the ```Tools``` tab, process the images.
+
+After determining which vision model you like, add images to the database by selecting them from the ```Create Database``` tab like any other file.  When you eventually create the database they will be automatically processed.
+
+### Entering Audio Files
+Audio files can be transcribed and put into the database to be searched.  Before transcribing a long audio file, I highly recommend testing the various ```Whisper``` models on a shorter audio file as well as experimenting with different ```batch``` settings.  Your goal should be to use as large of a ```Whisper``` model as your GPU supports and then adjust the batch size to keep the VRAM usage within your available VRAM.
+
+To test optimal settings:
+1) Within the ```Tools``` tab, select a short audio file.
+2) Select a ```Whisper``` model.
+3) Process the audio file.
+4) Within the ```Create Database``` tab, doubleclick the transcription that was just created.
+5) Skim the ```page content``` field to get a sense of whether the transcription is accurate enough for your use-case or if you need to selecta more accurate ```Whisper``` model.
+
+Once you've obtained the optimal settings for your system, it's time to transcribe an audio file into the database:
+1) Within the ```Create Database``` tab, delete any transcriptions you don't want entered into the database.
+2) Create new transcriptions you want entered (repeate for multiple files).
+   > Batch processing is not yet available.
+
+### Actually Creating The Database
+* Download a vector model from the ```Models``` tab.
+* Within the ```Create Database``` tab, create the database.
+
+### Manging the Database
+* The ```Manage Database``` tab allows you to view the contents of all databases that you've created and delete them if you want.
 
 ## Query a Database (No LM Studio)
 * In the ```Query Database``` tab, select the database you want to use from the pulldown menu.
 * Enter your question by typing it or using the ```Record Question``` button.
-* Check the ```chunks only``` checkbox.
-* Click ```Submit Question```, which will return chunks relevant to your query.
+* Check the ```chunks only``` checkbox to only receive the relevant contexts.
+* Click ```Submit Question```.
   * In the ```Settings``` tab, you can change multiple settings regarding querying the database.  More information can be found in the User Guide.
 
 ## Query a Database with a Response From LM Studio
-This program can get relevant chunks from the vector database and forwarding them - along with your question - to LM Studio for an answer!
+This program gets relevant chunks from the vector database and forwarding them - along with your question - to LM Studio for an answer!
 * Perform the above steps regarding entering a question and choosing settings, but make sure that ```Chunks Only``` is 🔥UNCHECKED🔥.
 * Start LM Studio and go to the Server tab on the left.
-* Load a model.  I've personally tested the following models as good:
-  * ```Marx_3B_V3```
-  * ```Mistral_7B_Instruct_v0_2```
-  * ```Neural_Chat_7b_v3_3```
-  * ```Llama_2_13b_chat_hf```
-  * ```SOLAR_10_7B_Instruct_v1_0```
+* Load a model.
 * Turn ```Apply Prompt Formatting``` to "OFF."
 * On the right side within ```Prompt Format```, make sure that all of the following settings are blank:
   * ```System Message Prefix```
@@ -212,20 +173,30 @@ This program can get relevant chunks from the vector database and forwarding the
 
 </details>
 
+[Back to Top](#top)
+
+<a name="request-a-feature-or-report-a-bug"></a>
 ## Request a Feature or Report a Bug
 
 Feel free to report bugs or request enhancements by creating an issue on github or contacting me on the LM Studio Discord server (see below link)!
 
-<div align="center"><h2>CONTACT</h2></div>
+<a name="contact"></a>
+<div align="center"><h3>CONTACT</h3></div>
 
 All suggestions (positive and negative) are welcome.  "bbc@chintellalaw.com" or feel free to message me on the [LM Studio Discord Server](https://discord.gg/aPQfnNkxGC).
 
+<br>
 <div align="center">
-  <img src="https://github.com/BBC-Esq/ChromaDB-Plugin-for-LM-Studio/raw/main/example0.png" alt="Example Image">
-  <img src="https://github.com/BBC-Esq/ChromaDB-Plugin-for-LM-Studio/raw/main/example1.png" alt="Example Image">
-  <img src="https://github.com/BBC-Esq/ChromaDB-Plugin-for-LM-Studio/raw/main/example2.png" alt="Example Image">
-  <img src="https://github.com/BBC-Esq/ChromaDB-Plugin-for-LM-Studio/raw/main/example3.png" alt="Example Image">
-  <img src="https://github.com/BBC-Esq/ChromaDB-Plugin-for-LM-Studio/raw/main/example4.png" alt="Example Image">
-  <img src="https://github.com/BBC-Esq/ChromaDB-Plugin-for-LM-Studio/raw/main/example5.png" alt="Example Image">
-  <img src="https://github.com/BBC-Esq/ChromaDB-Plugin-for-LM-Studio/raw/main/example6.png" alt="Example Image">
+    <a href="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/example1.png" target="_blank">
+        <img src="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/example1.png?raw=true" alt="Example Image" width="350">
+    </a>
+    <a href="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/example2.png" target="_blank">
+        <img src="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/example2.png?raw=true" alt="Example Image" width="350">
+    </a>
+    <a href="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/example3.png" target="_blank">
+        <img src="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/example3.png?raw=true" alt="Example Image" width="350">
+    </a>
+    <a href="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/example4.png" target="_blank">
+        <img src="https://github.com/BBC-Esq/VectorDB-Plugin-for-LM-Studio/blob/main/src/Assets/example4.png?raw=true" alt="Example Image" width="350">
+    </a>
 </div>

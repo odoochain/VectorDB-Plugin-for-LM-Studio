@@ -1,18 +1,23 @@
-from PySide6.QtWidgets import QLabel, QGridLayout, QVBoxLayout, QComboBox, QWidget
-from PySide6.QtCore import Qt
 import yaml
 from pathlib import Path
+import torch
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel, QGridLayout, QVBoxLayout, QComboBox, QWidget
 from constants import VISION_MODELS
+
+def is_cuda_available():
+    return torch.cuda.is_available()
+
+def get_cuda_capability():
+    if is_cuda_available():
+        return torch.cuda.get_device_capability(0)  # Get capability of the first CUDA device
+    return (0, 0)
 
 class VisionSettingsTab(QWidget):
     def __init__(self):
         super().__init__()
-
-        # Main layout
         mainVLayout = QVBoxLayout()
         self.setLayout(mainVLayout)
-
-        # Options layout
         gridLayout = QGridLayout()
         mainVLayout.addLayout(gridLayout)
 
@@ -24,64 +29,101 @@ class VisionSettingsTab(QWidget):
         gridLayout.addWidget(label_size, 0, 3)
         gridLayout.setAlignment(label_size, Qt.AlignCenter)
 
+        label_precision = QLabel("Precision")
+        gridLayout.addWidget(label_precision, 0, 5)
+        gridLayout.setAlignment(label_precision, Qt.AlignCenter)
+
+        label_vram = QLabel("VRAM")
+        gridLayout.addWidget(label_vram, 0, 7)
+        gridLayout.setAlignment(label_vram, Qt.AlignCenter)
+
         label_quant = QLabel("Quant")
-        gridLayout.addWidget(label_quant, 0, 5)
+        gridLayout.addWidget(label_quant, 0, 9)
         gridLayout.setAlignment(label_quant, Qt.AlignCenter)
 
         self.modelComboBox = QComboBox()
-        self.modelComboBox.addItems(list(VISION_MODELS.keys()))
+        self.populate_model_combobox()
+        self.modelComboBox.setMinimumWidth(175)
         gridLayout.addWidget(self.modelComboBox, 0, 2)
 
-        self.sizeComboBox = QComboBox()
-        gridLayout.addWidget(self.sizeComboBox, 0, 4)
+        self.sizeLabel = QLabel()
+        gridLayout.addWidget(self.sizeLabel, 0, 4)
 
-        self.quantComboBox = QComboBox()
-        gridLayout.addWidget(self.quantComboBox, 0, 6)
+        self.precisionLabel = QLabel()
+        gridLayout.addWidget(self.precisionLabel, 0, 6)
 
-        self.modelComboBox.currentIndexChanged.connect(self.updateChosenModel)
-        self.sizeComboBox.currentIndexChanged.connect(self.updateChosenSize)
-        self.quantComboBox.currentIndexChanged.connect(self.updateChosenQuant)
+        self.vramLabel = QLabel()
+        gridLayout.addWidget(self.vramLabel, 0, 8)
 
-        # Initial widget states
-        self.updateComboBoxes()
-        self.updateChosenModel()
+        self.quantLabel = QLabel()
+        gridLayout.addWidget(self.quantLabel, 0, 10)
 
-    def updateComboBoxes(self):
-        model = self.modelComboBox.currentText()
-        sizes = VISION_MODELS[model]['available_sizes']
-        quants = VISION_MODELS[model]['available_quants']
+        self.modelComboBox.currentIndexChanged.connect(self.updateModelInfo)
 
-        self.sizeComboBox.clear()
-        self.quantComboBox.clear()
+        self.set_initial_model()
 
-        self.sizeComboBox.addItems(sizes)
-        self.quantComboBox.addItems(quants)
+    def populate_model_combobox(self):
+        cuda_available = is_cuda_available()
+        cuda_capability = get_cuda_capability()
+        available_models = []
+        
+        for model, info in VISION_MODELS.items():
+            requires_cuda = info.get('requires_cuda', True)
+            precision = info.get('precision')
+            
+            if cuda_available:
+                if requires_cuda:
+                    if precision == 'bfloat16':
+                        if cuda_capability >= (8, 6):
+                            available_models.append(model)
+                    else:
+                        available_models.append(model)
+                else:
+                    available_models.append(model)
+            else:
+                if not requires_cuda:
+                    available_models.append(model)
+        
+        self.modelComboBox.addItems(available_models)
 
-    def updateChosenModel(self):
+    def set_initial_model(self):
+        config = self.read_config()
+        saved_model = config.get('vision', {}).get('chosen_model')
+
+        if saved_model and saved_model in [self.modelComboBox.itemText(i) for i in range(self.modelComboBox.count())]:
+            index = self.modelComboBox.findText(saved_model)
+            self.modelComboBox.setCurrentIndex(index)
+        else:
+            self.modelComboBox.setCurrentIndex(0)
+        
+        self.updateModelInfo()
+
+    def updateModelInfo(self):
         chosen_model = self.modelComboBox.currentText()
         self.updateConfigFile('chosen_model', chosen_model)
-        self.updateComboBoxes()
+        
+        model_info = VISION_MODELS[chosen_model]
+        self.sizeLabel.setText(model_info['size'])
+        self.precisionLabel.setText(model_info['precision'])
+        self.vramLabel.setText(model_info['vram'])
+        self.quantLabel.setText(model_info['quant'])
 
-    def updateChosenSize(self):
-        chosen_size = self.sizeComboBox.currentText()
-        self.updateConfigFile('chosen_size', chosen_size)
-
-    def updateChosenQuant(self):
-        chosen_quant = self.quantComboBox.currentText()
-        self.updateConfigFile('chosen_quant', chosen_quant)
-
-    def updateConfigFile(self, key, value):
+    def read_config(self):
         config_file_path = Path('config.yaml')
         if config_file_path.exists():
             try:
                 with open(config_file_path, 'r', encoding='utf-8') as file:
-                    current_config = yaml.safe_load(file)
+                    return yaml.safe_load(file)
             except Exception:
-                current_config = {}
+                pass
+        return {}
 
-            vision_config = current_config.get('vision', {})
+    def updateConfigFile(self, key, value):
+        current_config = self.read_config()
+        vision_config = current_config.get('vision', {})
+        if vision_config.get(key) != value:
             vision_config[key] = value
             current_config['vision'] = vision_config
-
+            config_file_path = Path('config.yaml')
             with open(config_file_path, 'w', encoding='utf-8') as file:
                 yaml.dump(current_config, file)

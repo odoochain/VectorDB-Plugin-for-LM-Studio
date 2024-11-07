@@ -24,7 +24,7 @@
     }
 
     main {
-      max-width: 800px;
+      max-width: 2160px;
       margin: 0 auto;
       padding: 20px;
     }
@@ -80,6 +80,13 @@
       font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
       color: #333;
     }
+	
+	a {
+	  color: #0d4885; /* Change this to your desired color */
+	}
+	a:visited {
+	  color: #0d4885; /* Color for visited links */
+	}
   </style>
 </head>
 <body>
@@ -90,91 +97,138 @@
 
   <main>
 	<h2><u>Server/LLM Settings</u></h2>
-    <p><code>Port</code>: Must match the port being used in LM Studio.</p>
+    <p><code>Port</code></p>
 	
-	<p><code>Max-tokens</code>: The maximum number of tokens that the LLM can use when providing a response. The default
-	of <code>-1</code> allows the LLM an unlimited number (up to the model's maximum context length specified within LM Studio).</p>
+	<p>Must match the port being used in LM Studio.</p>
+	
+	<p><code>Max-tokens</code></p>
+	
+	<p>The maximum number of tokens that the LLM can use when providing a response. The default of <code>-1</code> allows
+	the LLM an unlimited number (up to the model's maximum context length specified within LM Studio).</p>
 
-    <p><code>Temperature</code>: Determines the creativity of the LLM's response.  Can be between 0 and 1.  A higher number
-	means more creativity.</p>
+    <p><code>Temperature</code></p>
+	
+	<p> Determines the creativity of the LLM's response.  Can be between 0 and 1.  A higher number means more creativity.</p>
 
-    <h3>Prompt Format</h3>
-    <p>A <code>Prefix</code> and <code>Suffix</code> are sent to LM Studio along with your question and the results from the
-	vector database search.  Different LLM's are trained with different "prompt formats" and your results
-	will degrade if you don't use the correct one.</p>
+    <p><code>Prefix</code> and <code>Suffix</code></p>
 
-	<p>I recommend using a model within LM Studio that matches a present provided in this program since I've tested the models
+	<p>Sent to LM Studio along with your question and the results from the vector database search.  Different LLM's are
+	trained with different "prompt formats" and your results will degrade if you don't use the correct one.</p>
+
+	<p>I recommend using a model within LM Studio that matches a preset provided in this program since I've tested the models
 	specifically for RAG, but there's also space to enter a custom prefix/suffix if you want to try different models.  Make sure
 	to clear the prefix and suffix boxes as well as disable "automatic prompt formatting" within LM Studio as there
 	have been bug reports if you don't.</p>
 	
-	<p><code>Disable</code>: Disables prompt formatting so you can exclusively use the prompt formatting settings within LM Studio.</p>
+	<p><code>Disable</code></p>
 	
-	<h2><u>Database Creation</u></h2>
+	<p>Disables prompt formatting so you can exclusively use the prompt formatting settings within LM Studio.</p>
 	
-	<p>Before text is put into the vector database (whether it originates from a pdf, audio transcription or image description) it
-	must be broken into chunks by the "Recursive Character Text Splitter" (aka, "Splitter") created by Langchain so that when you
-	search the database you can get relevant chunks/contexts.  The chunks of text are then converted into vectors by the embedding
-	model and put into the vector database.</p>
+	<h2><u>Database Creation Settings</u></h2>
 	
-	<p><code>Chunk Size</code>: The maximum length of a chunk/context in characters (NOT tokens).  The Splitter will strive to
-	achieve this limit. but may create shorter chunks by splitting between paragraphs sentences to keep related ideas together.</p>
+	<p><code>Create Device</code></p>
+	
+	<p>Either "cpu" and/or "cuda" depending on your hardware.  Always use "cuda" if available.</p>
+	
+	<p><code>Chunk Size</code>: Before text is entered into the vector database it must be broken into chunks, which are then
+	converted to vectors that are ultimately what's entered into the database.</p>
+	
+	<p>This refers to the maximum chunk length that the text splitter is allowed to create.  The optimal chunk size depends on the
+	type of document you are processing.  For example, books typically do well with a chunk size of 1000-1200 while a webscrape
+	of "tweets," for example, might do better with a chunk size of 200-400.  It is recommended to review the documents you enter
+	into the database beforehand and group documents into the same database that benefit from the same chunk size.</p>
+	
+	<p>Make sure that the chunk size falls under the "max sequence" of the chosen vector model.  You will not get notice if it
+	exceeds the "max sequence," but rather the model will simply truncate the text and your search results will suffer.
+	Remember, each token is approximately 3-4 characters.</p>
 
-	<p><code>Chunk Overlap</code>:Specifies the maximum number of characters (NOT tokens) that each chunk will include from the
-	previous chunk.  For example, if <code>chunk overlap</code> is set to 250 then first 250 characters of "Chunk #2" will consist
-	of the last 250 characters of "Chunk #1."  The goal is to try and preserve meaning if, for example, text is split in the
-	middle of a sentence.</p>
+	<p><code>Chunk Overlap</code>: Specifies the maximum number of characters (NOT tokens) that each chunk will include from the 
+	previous chunk.  The purpose of this is to prevent text from accidentally being split in the middle of an important concept.</p>
 	
-	<p>A good rule of thumb is to set <code>chunk overlap</code> to 1/4 or 1/3 of the <code>chunk size</code>.</p>
+	<p> For example, if <code>chunk overlap</code> is set to 250 then first 250 characters of "Chunk #2" will consist of the
+	last 250 characters of "Chunk #1."  A good rule of thumb is to set it a 25-50% of the <code>Chunk Size</code> setting.</p>
 	
-	<h2><u>Database Query</u></h2>
-	<p><code>Create Device</code>: Automatically populated with "cpu", "cuda" or "mps" based on your hardware.  Always use
-	"cuda" or "mps" if available.</p>
+	<p><code>Half-Precision</code>: Beginning with release 6.7.0, the program has a "Half-Precision" checkbox within the Settings tab.
+	This will use either <code>bfloat16</code> or <code>float16</code> when running the vector model.  However, this is only
+	available on GPU and will be disregarded if CPU is selected as the compute device.</p>
 	
-	<p><code>Contexts</code>: The maximum number of chunks/contexts that can be returned.  This is an upper limit, however,
-	and a chunk will only be returned if its meets the <code>similarity</code> threshhold setting.  For example, a setting of "10"
-	will return the 10 most relevant chunks/contexts (provided they all meet the similarity setting).</p>
+	<p>It is highly recommended to use <code>half-precision</code> because it results in a 2x speedup for only a 1% quality loss.</p>
 	
-	<p><code>Similarity</code>: The threshhold of how relevant a chunk/context must be before it will be returned.  A setting
-	of <code>.1</code> is a low-relevance while .9 would be very high.  Do not use "1."</p>
+	<h2><u>Database Query Setting</u></h2>
 	
-	<p><code>Search Filter</code>: After chunks have been obtained, excludes a chunk/context unless it contains the specified
-	search term VERBATIM (but is not case-sensitive).  This filter only runs AFTER the <code>contexts</code> and
-	<code>similarity</code> settings.</p>
+	<p><code>Create Device</code>: Either "cpu" or "cuda" based on your hardware.  I recommend "cpu," which will force the model
+	to be loaded in the RAM and conserve VRAM.</p>
+	
+	<p><code>Contexts</code>: The maximum number of chunks/contexts that can be returned.</p>
+	
+	<p><code>Similarity</code>: A decimal number between 0 and 1 that specifies how relevant a chunk/context must be.  A setting
+	closer to "1" will retrieve more documents.  CAUTION: Do not use "1".  The default is ".8".</p>
+	
+	<p>Feel free to adjust this setting, but it is more important to adjust the chunk size/overlap as well as ask good questions.</p>
+	
+	<p><code>Search Term Filter</code>: Searches the chunks that the database has already returned and removes the ones that
+	do not contain the specified search term.  The filter is NOT case sensitive but does require a verbatim match.  For example,
+	if you specify the term "child" it would NOT exclude "Child" but it would exclude "children."  Only use when you know a
+	chunk should have a key term.</p>
+	
+	<p><code>Clear Filter</code>: Clears the <code>Search Term Filter</code>.</p>
+	
+	<p><code>File Type</code>: Only returns chunks of text from the database that come from a particular document type.
+	Current options are images, audio, and documents.  The "documents" option refers to all files types (e.g. .pdf, .docx, etc.)
+	that this program accepts other than audio transcripts and images and "All Files" is self-explanatory.</p>
+	
+	<p><u>It is crucial to understand how all of the search settings interact:</u>:</p>
+	
+	<ol>
+		<li>A user clicks the "Submit Question" button within the GUI.</li><br>
+		<li>Only chunks that originate from the specified File Type will be searched.</li><br>
+		<li>Out of these...only chunks that meet the <code>Similarity</code> threshold are eligible to be returned.</li><br>
+		<li>Out of these...the most relevant ones up to the <code>Contexts</code> limit will be returned.</li><br>
+		<li>The <code>Search Term Filter</code> subsequently removes any chunks that do not contain the required term.</li><br>
+		<li>Any remaining chunks will be sent to the LLM along with your question to get a response.</li>
+	</ol>
+	
+	<h2><u>Text to Speech Settings</u></h2>
+	
+	<p>The "TTS" button within the Query Database tab will convert the LLM's response to audio.</p>
+	
+	<p>Currently, this program only implements customization for the <code>Bark</code> backend.  You can the model size and/or
+	precision to suit your memory and compute requirements.</p>
+	
+	<p><code>v2/en_speaker_6</code> is the highest quality voice IMHO.  The only female voice is <code>v2/en_speaker_9</code>.
+	
+	<p>Google TTS is the only one that doesn't not rely on GPU or CPU, but it requires an internet connection.</p>
+	
+	<h2><u>Vision Models Settings</u></h2>
+	
+	<p>Consult the "Vision" tab within the User Guide for more information regarding the various visions models themselves.</p>
+	
+	<p>It is highly recommended to test them before spending a large amount of time processing images only to find out that
+	your are not satisfied with the quality of the summary that a particular model makes.</p>
+	
+	<ol>
+		<li>Within the Create Database tab, add one or more images that you would hypothetically want in the database.</li>
+		<li>In the Settings tab, select the vision model you want to test.</li>
+		<li>Within the Tools tab, click "Process."</li>
+		<li>Summaries of the images that would would hypothetically be entered into the database will be displayed.</li>
+	</ol>
 
-	For example, if the filter is "book" then only chunks that contain "book" would be sent to the LLM or displayed (if
-	"chunks only" is checked).  Even chunks with terms like "books", "bookend," or similar derivations would still be excluded,
-	but terms like "Book," "book" or "bOoK" would not result in the chunk being excluded.</p>
+	<h2>Restoring Database Backups</h2>
 	
-	<p><code>Clear Filter</code>: Removes any filters.
+	<p>In the rare circumstances that you databases become corrupt or unable to load, the Tool tab contains a button to
+	restore all databases that have been backed up.  Use with caution.</p>
+
+	<h2>Restoring Configuration File</h2>
+	<p>This program relies on a <code>config.yaml</code> file to store settings as well as information about the databases that
+	you've created.  If you lose this file or it becomes corrupted, it is best to try and restore backups of any databases first.</p>
 	
-	<p>The pulldown menu with <code>All Files</code>, <code>Images-Only</code>, <code>Documents-Only</code>, and
-	<code>Audio-Only</code> provides yet another filter and it is cumulative with the search term filter.  "Audio" refers to
-	audio transcriptions, "images" is self-explanatory, "and "documents" refers to everything that is not an image or transcription.</p>
+	<p>If that fails (e.g. the config.yaml file is completely gone), the User Guide folder contains an original config.yaml file
+	that you should copy to the main directory with all the other scripts.  Please be aware that this file no longer includes
+	any information about the databases you've created.</p>
 	
-	<p>The <code>chunks only</code> checkbox is located near the search button.  If checked, only the relevant chunks will be
-	returned and LM Studio will not be connected to.  This is a good way to test the quality of a vector model as well as the
-	settings you choose.</p>
-	
-	<h2><u>Bark Settings</u></h2>
-	
-	<p>The "Bark Response" button will convert the LLM's response to audio.  I only recommend using this feature if you have
-	gpu-acceleration and I've disabled it for certain platforms due to compatibility issues until I find a better solution.</p>
-	
-	<p><code>Size</code>: Size of the Bark model to use, each with its own resource requirements, speed, and accuracy.</p>
-	
-	<p><code>Quant</code>: <u>float32</u> casts the bark model in its original floating point format.  <u>float16</u> cuts the
-	memory/compute requirements by half with a relatively small loss in quality.</p>
-	
-	<p><code>Voices</code>: Choose different voices.  <code>v2/en_speaker_6</code> is the highest quality IMHO but it's fun to
-	experiment.  The only female voice is <code>v2/en_speaker_9</code>.
-	<h2><u>Vision Models</u></h2>
-	
-	<p>Consult the "Vision" tab within the User Guide.</p>
-	
-	<h2>Break in Case of Emergency</h2>
-	<p>Settings for this program are stored in <code>config.yaml</code>.  If you mistakenly change a setting or lose this file,
-	there is a backup within the <u>User Guide</u> folder.</p>
+	<p>If you are forced to do this, you must manually delete all files and folders within the "Vector_DB" and "Vector_DB_Backup".
+	If you do not do this, there may be old database files within those folders that create a conflict when you try to create
+	a database with the same name.</p>
     
   </main>
 
