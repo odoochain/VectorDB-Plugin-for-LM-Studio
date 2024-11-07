@@ -2,10 +2,10 @@ Compute_Device:
   available:
   - cpu
   - cuda
-  database_creation: cpu
-  database_query: cpu
+  database_creation: cuda
+  database_query: cuda
   gpu_brand: NVIDIA
-EMBEDDING_MODEL_NAME: null
+EMBEDDING_MODEL_NAME: D:/zenxdev/VectorDB-Plugin-for-LM-Studio/src/Embedding_Models/hkunlp--instructor-xl
 Platform_Info:
   os: windows
 Supported_CTranslate2_Quantizations:
@@ -78,4 +78,4 @@ vision:
   chosen_quant: float16
   chosen_size: fast-dude!
   flash_attention2: null
-  test_image: null
+  test_image: C:/Users/xxz/Pictures/n8zEczw5_400x400.jpg

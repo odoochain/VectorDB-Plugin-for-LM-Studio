@@ -10,6 +10,8 @@ Successfully installed torch-2.2.2+cu121
 
 不是 pip install -i https://pypi.mirrors.ustc.edu.cn/simple/ -U torch==2.2.2+cpu
 
+.\Scripts\activate # 可选
+python gui.py
 ------------------------
 ## run
 p

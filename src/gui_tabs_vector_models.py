@@ -106,7 +106,7 @@ class VectorModelsTab(QWidget):
         selected_id = self.model_radiobuttons.checkedId()
         if selected_id != -1:
             model_name = list(self.available_models.keys())[selected_id - 1]
-            model_url = f"https://huggingface.co/{model_name}"
+            model_url = f"https://hf-mirror.com/{model_name}"  # https://huggingface.co/
             target_directory = Path("Embedding_Models") / self.get_model_directory_name(model_name)
 
             def download_model():
